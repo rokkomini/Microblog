@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { User } = require("./models/user");
@@ -9,6 +10,14 @@ const JWT_SECRET = "8vdbjsy73423429999sajbh73949nadkur4ew";
 
 //json parser middleware
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.render("landingPage.ejs");
+});
+
+app.get("/signupPage", (req, res) => {
+ res.render("signupPage.ejs");
+ });
 
 app.use((req, res, next) => {
   const authHeader = req.header("Authorization");
@@ -28,7 +37,6 @@ const requireLogin = (req, res, next) => {
 };
 
 app.get("/secret", requireLogin, (req, res) => {
-  // app.render("/index.ejs");
   if (req.user) {
     res.json({ message: `Hello ${req.user.username}` });
   } else {
@@ -59,10 +67,6 @@ app.post("/users", async (req, res) => {
 });
 
 mongoose.connect("mongodb://127.0.0.1/backend1");
-
-app.get("/", (req, res) => {
-  res.render("index.ejs");
-});
 
 app.listen(PORT, () => {
   console.log(`Started express server on port: ${PORT}`);
